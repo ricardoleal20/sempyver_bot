@@ -1,0 +1,33 @@
+name: Update package version 🔖
+
+on:
+  pull_request:
+    types:
+      - synchronize
+
+jobs:
+  run_script:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository 🔎
+        uses: actions/checkout@v2
+
+      - name: Set up Python 🐍
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.10
+
+      - name: Install sempyver 🏗️
+        run: pip install sempyver
+
+      - name: Update the changelog and version 🏷️
+        run: semver changelog
+
+      - name: Commit changes 🎉
+        run: |
+          git config user.name "sempyver"
+          git config user.email "sempyver-bot@github_app.com"
+          git add .
+          git commit -m "🔖 Version: Bump version"
+          git push
